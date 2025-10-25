@@ -1,0 +1,67 @@
+<!--pages/imageGen/index.wxml-->
+<view class="container">
+  <view class="header">
+    <text class="title">AI图片生成</text>
+    <text class="subtitle">输入提示词，创造独特图像</text>
+  </view>
+
+  <view class="input-section">
+    <textarea 
+      class="prompt-input" 
+      placeholder="请输入图片生成提示词..." 
+      bindinput="onPromptInput"
+      value="{{prompt}}"
+      maxlength="-1"
+    ></textarea>
+    
+    <view class="button-container">
+      <button 
+        class="generate-button {{isGenerating ? 'generating' : ''}}" 
+        bindtap="generateImage" 
+        disabled="{{isGenerating}}"
+      >
+        <text>{{isGenerating ? '生成中...' : '生成图片'}}</text>
+      </button>
+    </view>
+    
+    <view class="error-message" wx:if="{{errorMessage}}">
+      <text>{{errorMessage}}</text>
+    </view>
+    
+    <!-- 生成进度显示 -->
+    <view class="progress-section" wx:if="{{isGenerating}}">
+      <view class="progress-container">
+        <view class="progress-text">{{loadingText}}</view>
+        <view class="progress-bar">
+          <view class="progress-fill" style="width: {{loadingProgress}}%"></view>
+        </view>
+        <view class="progress-percent">{{loadingProgress}}%</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="result-section" wx:if="{{showResult}}">
+    <view class="image-container">
+      <image 
+        src="{{generatedImage}}" 
+        mode="aspectFit" 
+        class="generated-image"
+        bindtap="previewImage"
+        binderror="onImageError"
+      ></image>
+      
+      <!-- 图片加载失败提示 -->
+      <view class="image-error" wx:if="{{imageLoadError}}">
+        <view class="error-icon">⚠️</view>
+        <view class="error-text">图片加载失败</view>
+        <button class="retry-button" bindtap="retryLoadImage">重新加载</button>
+      </view>
+    </view>
+    
+    <view class="action-buttons">
+      <button class="action-button" bindtap="saveImage">
+        <text>保存到相册</text>
+      </button>
+    </view>
+  </view>
+</view>

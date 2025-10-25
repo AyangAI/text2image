@@ -1,0 +1,93 @@
+<!--index.wxml-->
+<view class="page-container">
+
+  
+  <!-- 顶部区域 -->
+  <view class="header-section">
+    <view class="welcome-icon">👋</view>
+    <view class="title">欢迎加入</view>
+    <view class="subtitle">填写信息，开启精彩旅程</view>
+  </view>
+  
+  <!-- 表单区域 -->
+  <view class="form-section">
+    <form bindsubmit="onSubmitRegister" class="register-form">
+      <view class="form-group">
+        <view class="input-wrapper">
+          <view class="input-icon">📱</view>
+          <input 
+            class="form-input" 
+            type="number" 
+            placeholder="请输入手机号" 
+            value="{{formData.phone}}"
+            bindinput="onPhoneInput"
+            maxlength="11"
+          />
+        </view>
+      </view>
+      
+      <view class="form-group">
+        <view class="input-wrapper">
+          <view class="input-icon">👤</view>
+          <input 
+            class="form-input" 
+            type="text" 
+            placeholder="请输入昵称" 
+            value="{{formData.nickname}}"
+            bindinput="onNicknameInput"
+            maxlength="20"
+          />
+        </view>
+      </view>
+      
+      <view class="form-group">
+        <view class="gender-label">选择性别</view>
+        <radio-group class="gender-group" bindchange="onGenderChange">
+          <label class="gender-item {{formData.gender === 'male' ? 'active' : ''}}">
+            <radio value="male" checked="{{formData.gender === 'male'}}" />
+            <view class="gender-content">
+              <view class="gender-icon">👨</view>
+              <text class="gender-text">男</text>
+            </view>
+          </label>
+          <label class="gender-item {{formData.gender === 'female' ? 'active' : ''}}">
+            <radio value="female" checked="{{formData.gender === 'female'}}" />
+            <view class="gender-content">
+              <view class="gender-icon">👩</view>
+              <text class="gender-text">女</text>
+            </view>
+          </label>
+          <label class="gender-item {{formData.gender === 'secret' ? 'active' : ''}}">
+            <radio value="secret" checked="{{formData.gender === 'secret'}}" />
+            <view class="gender-content">
+              <view class="gender-icon">🔒</view>
+              <text class="gender-text">保密</text>
+            </view>
+          </label>
+        </radio-group>
+      </view>
+      
+      <button 
+        class="register-btn {{canSubmit ? 'active' : ''}}" 
+        form-type="submit"
+        disabled="{{!canSubmit}}"
+      >
+        <text class="btn-text">立即注册</text>
+        <view class="btn-icon">✨</view>
+      </button>
+    </form>
+  </view>
+  
+  <!-- 底部装饰 -->
+  <view class="footer-section">
+    <view class="footer-text">安全 · 便捷 · 可靠</view>
+  </view>
+  
+  <!-- 加载遮罩 -->
+  <view wx:if="{{loading}}" class="loading-overlay">
+    <view class="loading-content">
+      <view class="loading-spinner"></view>
+      <text class="loading-text">注册中...</text>
+    </view>
+  </view>
+</view>
