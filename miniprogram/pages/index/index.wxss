@@ -2,16 +2,21 @@
 
 page {
   height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  overflow: hidden;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #4facfe 100%);
+  overflow-y: auto;
 }
 
 .page-container {
   position: relative;
   height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   font-family: PingFang SC, -apple-system, BlinkMacSystemFont, sans-serif;
+  padding: 0 30rpx;
+  box-sizing: border-box;
+  background: transparent;
 }
 
 
@@ -21,7 +26,7 @@ page {
   position: relative;
   z-index: 1;
   text-align: center;
-  padding: 120rpx 60rpx 80rpx;
+  padding: 80rpx 30rpx 60rpx;
 }
 
 .welcome-icon {
@@ -41,13 +46,14 @@ page {
   font-weight: 700;
   color: #ffffff;
   margin-bottom: 20rpx;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.4);
 }
 
 .subtitle {
   font-size: 28rpx;
-  color: rgba(255, 255, 255, 0.8);
-  font-weight: 300;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 400;
+  text-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.3);
 }
 
 /* 表单区域 */
@@ -56,7 +62,7 @@ page {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 60rpx;
+  padding: 0 30rpx 40rpx;
   z-index: 1;
 }
 
@@ -66,16 +72,13 @@ form {
 }
 
 .register-form {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border-radius: 40rpx;
-  padding: 60rpx 50rpx;
-  box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: transparent;
+  padding: 50rpx 0;
+  width: 100%;
 }
 
 .form-group {
-  margin-bottom: 50rpx;
+  margin-bottom: 40rpx;
 }
 
 .input-wrapper {
@@ -91,15 +94,15 @@ form {
 }
 
 .input-wrapper:focus-within {
-  border-color: #667eea;
+  border-color: #f5576c;
   background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 8rpx 32rpx rgba(102, 126, 234, 0.2);
+  box-shadow: 0 8rpx 32rpx rgba(245, 87, 108, 0.2);
 }
 
 .input-icon {
   font-size: 36rpx;
   padding: 0 30rpx;
-  color: #667eea;
+  color: #f5576c;
 }
 
 .form-input {
@@ -114,6 +117,15 @@ form {
 
 .form-input::placeholder {
   color: #999999;
+}
+
+/* 邀请码提示 */
+.invite-tip {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 15rpx;
+  padding-left: 20rpx;
+  text-shadow: 0 1rpx 3rpx rgba(0, 0, 0, 0.3);
 }
 
 /* 性别选择 */
@@ -142,9 +154,9 @@ form {
 }
 
 .gender-item.active {
-  border-color: #667eea;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  box-shadow: 0 8rpx 32rpx rgba(102, 126, 234, 0.3);
+  border-color: #f5576c;
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+  box-shadow: 0 8rpx 32rpx rgba(245, 87, 108, 0.3);
 }
 
 .gender-item.active .gender-content {
@@ -155,7 +167,7 @@ form {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40rpx 20rpx;
+  padding: 30rpx 15rpx;
   color: #666666;
   transition: color 0.3s ease;
 }
@@ -188,7 +200,7 @@ form {
   font-weight: 600;
   border-radius: 25rpx;
   border: none;
-  margin-top: 40rpx;
+  margin-top: 30rpx;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -199,14 +211,14 @@ form {
 }
 
 .register-btn.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
   color: #ffffff;
-  box-shadow: 0 8rpx 32rpx rgba(102, 126, 234, 0.4);
+  box-shadow: 0 8rpx 32rpx rgba(245, 87, 108, 0.4);
 }
 
 .register-btn.active:active {
   transform: translateY(2rpx);
-  box-shadow: 0 5rpx 15rpx rgba(102, 126, 234, 0.4);
+  box-shadow: 0 5rpx 15rpx rgba(245, 87, 108, 0.4);
 }
 
 .btn-text {
@@ -228,7 +240,9 @@ form {
   position: relative;
   z-index: 1;
   text-align: center;
-  padding: 40rpx 60rpx 60rpx;
+  padding: 30rpx 30rpx 60rpx;
+  background: transparent;
+  margin-top: auto;
 }
 
 .footer-text {

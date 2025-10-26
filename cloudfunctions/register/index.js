@@ -10,13 +10,26 @@ exports.main = async (event, context) => {
   console.log('register云函数被调用，参数:', event)
   
   try {
-    const { phone, nickname, gender } = event
+    const { phone, nickname, gender, inviteCode } = event
     
     // 简单验证
-    if (!phone || !nickname) {
+    if (!phone || !nickname || !inviteCode) {
       return {
         success: false,
-        message: '手机号和昵称不能为空'
+        message: '手机号、昵称和邀请码不能为空'
+      }
+    }
+    
+    // 验证邀请码
+    const inviteCodeResult = await db.collection('invitationCodes').where({
+      code: inviteCode,
+      isUsed: false
+    }).get()
+    
+    if (inviteCodeResult.data.length === 0) {
+      return {
+        success: false,
+        message: '邀请码无效或已被使用'
       }
     }
     
@@ -39,7 +52,17 @@ exports.main = async (event, context) => {
         nickname: nickname,
         gender: gender || 'male',
         createTime: new Date(),
-        openid: cloud.getWXContext().OPENID
+        openid: cloud.getWXContext().OPENID,
+        inviteCode: inviteCode
+      }
+    })
+    
+    // 标记邀请码为已使用
+    await db.collection('invitationCodes').doc(inviteCodeResult.data[0]._id).update({
+      data: {
+        isUsed: true,
+        usedBy: cloud.getWXContext().OPENID,
+        usedAt: new Date()
       }
     })
     

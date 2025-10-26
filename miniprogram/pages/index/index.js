@@ -6,7 +6,8 @@ Page({
     formData: {
       phone: '',
       nickname: '',
-      gender: 'male'
+      gender: 'male',
+      inviteCode: ''
     },
     loading: false,
     canSubmit: false
@@ -77,6 +78,15 @@ Page({
     this.checkCanSubmit();
   },
 
+  // 邀请码输入事件
+  onInviteCodeInput(e) {
+    const inviteCode = e.detail.value.toUpperCase(); // 转换为大写
+    this.setData({
+      'formData.inviteCode': inviteCode
+    });
+    this.checkCanSubmit();
+  },
+
   // 性别选择事件
   onGenderChange(e) {
     const gender = e.detail.value;
@@ -88,9 +98,12 @@ Page({
 
   // 检查是否可以提交
   checkCanSubmit() {
-    const { phone, nickname, gender } = this.data.formData;
+    const { phone, nickname, gender, inviteCode } = this.data.formData;
     const phoneRegex = /^1[3-9]\d{9}$/;
-    const canSubmit = phoneRegex.test(phone) && nickname.trim().length > 0 && gender;
+    const canSubmit = phoneRegex.test(phone) && 
+                     nickname.trim().length > 0 && 
+                     gender && 
+                     inviteCode.trim().length === 8; // 邀请码必须是8位
     
     this.setData({
       canSubmit: canSubmit
@@ -107,7 +120,7 @@ Page({
       return;
     }
 
-    const { phone, nickname, gender } = this.data.formData;
+    const { phone, nickname, gender, inviteCode } = this.data.formData;
     
     // 验证手机号格式
     const phoneRegex = /^1[3-9]\d{9}$/;
@@ -136,6 +149,15 @@ Page({
       return;
     }
 
+    // 验证邀请码
+    if (!inviteCode || inviteCode.length !== 8) {
+      wx.showToast({
+        title: '请输入8位邀请码',
+        icon: 'none'
+      });
+      return;
+    }
+
     this.setData({
       loading: true
     });
@@ -147,6 +169,7 @@ Page({
         phone: phone,
         nickname: nickname.trim(),
         gender: gender,
+        inviteCode: inviteCode,
         createTime: new Date()
       }
     }).then(res => {

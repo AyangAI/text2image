@@ -41,6 +41,21 @@
       </view>
       
       <view class="form-group">
+        <view class="input-wrapper">
+          <view class="input-icon">🎫</view>
+          <input 
+            class="form-input" 
+            type="text" 
+            placeholder="请输入邀请码" 
+            value="{{formData.inviteCode}}"
+            bindinput="onInviteCodeInput"
+            maxlength="8"
+          />
+        </view>
+        <view class="invite-tip">内测阶段，需要邀请码才能注册</view>
+      </view>
+      
+      <view class="form-group">
         <view class="gender-label">选择性别</view>
         <radio-group class="gender-group" bindchange="onGenderChange">
           <label class="gender-item {{formData.gender === 'male' ? 'active' : ''}}">
