@@ -5,10 +5,10 @@
     "pages/imageGen/index"
   ],
   "window": {
-    "backgroundColor": "#f093fb",
-    "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#F6F6F6",
-    "navigationBarTitleText": "云开发 QuickStart",
+    "backgroundColor": "#ffffff",
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTitleText": "",
     "navigationBarTextStyle": "black"
   },
   "sitemapLocation": "sitemap.json",

@@ -46,6 +46,15 @@ Desktop.ini
 *.p12
 config/secrets.js
 config/keys.js
+**/secrets.json
+**/config/production.json
+**/config/development.json
+**/.env*
+**/api-keys.json
+
+# 云函数环境变量配置
+cloudfunctions/*/env.json
+cloudfunctions/*/secrets.json
 
 # 构建输出
 dist/

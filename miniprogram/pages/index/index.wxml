@@ -13,7 +13,7 @@
   <view class="form-section">
     <form bindsubmit="onSubmitRegister" class="register-form">
       <view class="form-group">
-        <view class="input-wrapper">
+        <view class="input-wrapper {{validation.phoneValid === false ? 'error' : validation.phoneValid === true ? 'success' : ''}}">
           <view class="input-icon">📱</view>
           <input 
             class="form-input" 
@@ -21,13 +21,17 @@
             placeholder="请输入手机号" 
             value="{{formData.phone}}"
             bindinput="onPhoneInput"
+            bindblur="onPhoneBlur"
             maxlength="11"
           />
+          <view wx:if="{{validation.phoneValid === true}}" class="validation-icon success">✓</view>
+          <view wx:if="{{validation.phoneValid === false}}" class="validation-icon error">✗</view>
         </view>
+        <view wx:if="{{validation.phoneError}}" class="error-message">{{validation.phoneError}}</view>
       </view>
       
       <view class="form-group">
-        <view class="input-wrapper">
+        <view class="input-wrapper {{validation.nicknameValid === false ? 'error' : validation.nicknameValid === true ? 'success' : ''}}">
           <view class="input-icon">👤</view>
           <input 
             class="form-input" 
@@ -35,13 +39,17 @@
             placeholder="请输入昵称" 
             value="{{formData.nickname}}"
             bindinput="onNicknameInput"
+            bindblur="onNicknameBlur"
             maxlength="20"
           />
+          <view wx:if="{{validation.nicknameValid === true}}" class="validation-icon success">✓</view>
+          <view wx:if="{{validation.nicknameValid === false}}" class="validation-icon error">✗</view>
         </view>
+        <view wx:if="{{validation.nicknameError}}" class="error-message">{{validation.nicknameError}}</view>
       </view>
       
       <view class="form-group">
-        <view class="input-wrapper">
+        <view class="input-wrapper {{validation.inviteCodeValid === false ? 'error' : validation.inviteCodeValid === true ? 'success' : ''}}">
           <view class="input-icon">🎫</view>
           <input 
             class="form-input" 
@@ -49,10 +57,14 @@
             placeholder="请输入邀请码" 
             value="{{formData.inviteCode}}"
             bindinput="onInviteCodeInput"
+            bindblur="onInviteCodeBlur"
             maxlength="8"
           />
+          <view wx:if="{{validation.inviteCodeValid === true}}" class="validation-icon success">✓</view>
+          <view wx:if="{{validation.inviteCodeValid === false}}" class="validation-icon error">✗</view>
         </view>
-        <view class="invite-tip">内测阶段，需要邀请码才能注册</view>
+        <view wx:if="{{validation.inviteCodeError}}" class="error-message">{{validation.inviteCodeError}}</view>
+        <view wx:else class="invite-tip">内测阶段，需要邀请码才能注册</view>
       </view>
       
       <view class="form-group">

@@ -1,0 +1,44 @@
+<svg width="375" height="812" viewBox="0 0 375 812" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- 主渐变背景 -->
+    <linearGradient id="mainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#764ba2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f093fb;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- 装饰性渐变 -->
+    <radialGradient id="decorGradient1" cx="20%" cy="20%" r="40%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.1" />
+      <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0" />
+    </radialGradient>
+    
+    <radialGradient id="decorGradient2" cx="80%" cy="80%" r="50%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.08" />
+      <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0" />
+    </radialGradient>
+    
+    <!-- 波浪形状 -->
+    <path id="wave1" d="M0,400 Q187.5,350 375,400 L375,812 L0,812 Z" fill="url(#decorGradient1)"/>
+    <path id="wave2" d="M0,500 Q187.5,450 375,500 L375,812 L0,812 Z" fill="url(#decorGradient2)"/>
+  </defs>
+  
+  <!-- 主背景 -->
+  <rect width="375" height="812" fill="url(#mainGradient)"/>
+  
+  <!-- 装饰圆形 -->
+  <circle cx="50" cy="150" r="80" fill="url(#decorGradient1)"/>
+  <circle cx="320" cy="250" r="60" fill="url(#decorGradient2)"/>
+  <circle cx="100" cy="600" r="100" fill="url(#decorGradient1)"/>
+  <circle cx="300" cy="700" r="70" fill="url(#decorGradient2)"/>
+  
+  <!-- 波浪装饰 -->
+  <use href="#wave1" opacity="0.3"/>
+  <use href="#wave2" opacity="0.2"/>
+  
+  <!-- 顶部装饰 -->
+  <rect x="0" y="0" width="375" height="200" fill="url(#decorGradient1)" opacity="0.2"/>
+  
+  <!-- 底部装饰 -->
+  <rect x="0" y="612" width="375" height="200" fill="url(#decorGradient2)" opacity="0.15"/>
+</svg>

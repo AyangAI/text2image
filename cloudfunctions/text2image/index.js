@@ -10,8 +10,8 @@ const db = cloud.database()
 // 豆包AI图片生成API调用
 async function generateImageFromAPI(prompt) {
   try {
-    // 使用微信云函数内置的request方法
-    const request = require('request-promise')
+    // 使用axios进行HTTP请求
+    const axios = require('axios')
     
     // 从环境变量获取API密钥
     const apiKey = process.env.DOUBAO_API_KEY;
@@ -20,34 +20,33 @@ async function generateImageFromAPI(prompt) {
       throw new Error('API密钥未配置');
     }
     
-    const options = {
-      uri: 'https://ark.cn-beijing.volces.com/api/v3/images/generations',
+    const requestData = {
+      model: "doubao-seedream-4-0-250828",
+      prompt: prompt,
+      response_format: "url",
+      size: "2K",
+      stream: false,
+      watermark: true
+    };
+
+    console.log('调用豆包API，提示词:', prompt)
+    const response = await axios({
       method: 'POST',
+      url: 'https://ark.cn-beijing.volces.com/api/v3/images/generations',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${apiKey}`
       },
-      body: {
-        model: "doubao-seedream-4-0-250828",
-        prompt: prompt,
-        response_format: "url",
-        size: "2K",
-        stream: false,
-        watermark: true
-      },
-      json: true,
+      data: requestData,
       timeout: 60000
-    }
-
-    console.log('调用豆包API，提示词:', prompt)
-    const response = await request(options)
-    console.log('豆包API响应:', response)
+    });
+    console.log('豆包API响应:', response.data)
     
     // 检查响应数据格式
-    if (response.data && response.data.length > 0 && response.data[0].url) {
+    if (response.data && response.data.data && response.data.data.length > 0 && response.data.data[0].url) {
       return {
         success: true,
-        imageUrl: response.data[0].url,
+        imageUrl: response.data.data[0].url,
         prompt: prompt
       }
     } else {
@@ -57,11 +56,20 @@ async function generateImageFromAPI(prompt) {
   } catch (error) {
     console.error('豆包API调用失败:', error)
     
-    // 如果API调用失败，使用备用的模拟接口
-    console.log('使用备用模拟接口生成图片')
-    await new Promise(resolve => setTimeout(resolve, 2000))
+    // 如果API调用失败，使用备用的图片生成方案
+    console.log('使用备用图片生成方案')
+    await new Promise(resolve => setTimeout(resolve, 1000))
     
-    const imageUrl = `https://picsum.photos/seed/${encodeURIComponent(prompt)}/800/600`
+    // 使用多个备用图片服务
+    const backupServices = [
+      `https://via.placeholder.com/800x600/4a6cf7/ffffff?text=${encodeURIComponent(prompt.substring(0, 20))}`,
+      `https://dummyimage.com/800x600/4a6cf7/ffffff&text=${encodeURIComponent(prompt.substring(0, 15))}`,
+      `https://fakeimg.pl/800x600/4a6cf7/ffffff/?text=${encodeURIComponent(prompt.substring(0, 10))}`
+    ];
+    
+    // 随机选择一个备用服务
+    const randomIndex = Math.floor(Math.random() * backupServices.length);
+    const imageUrl = backupServices[randomIndex];
     
     return {
       success: true,

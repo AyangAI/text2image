@@ -94,7 +94,7 @@ Page({
             wx.showToast({
               title: '使用了备用生成方案',
               icon: 'none',
-              duration: 2000
+              duration: 3000
             });
           } else {
             wx.showToast({
@@ -107,19 +107,30 @@ Page({
             errorMessage: res.result.message || '图片生成失败，请重试'
           });
           wx.showToast({
-            title: '生成失败',
-            icon: 'error'
+            title: res.result.message || '生成失败，请重试',
+            icon: 'none',
+            duration: 3000
           });
         }
       },
       fail: err => {
         console.error('调用云函数失败:', err);
+        let errorMsg = '服务调用失败，请检查网络连接后重试';
+        
+        // 根据错误类型提供更具体的提示
+        if (err.errCode === -1) {
+          errorMsg = '网络连接失败，请检查网络后重试';
+        } else if (err.errCode === 40014) {
+          errorMsg = '云函数调用超时，请稍后重试';
+        }
+        
         this.setData({
-          errorMessage: '服务调用失败，请重试'
+          errorMessage: errorMsg
         });
         wx.showToast({
-          title: '服务调用失败',
-          icon: 'error'
+          title: errorMsg,
+          icon: 'none',
+          duration: 3000
         });
       },
       complete: () => {
@@ -145,10 +156,16 @@ Page({
        imageLoadError: true
      });
      
-     wx.showToast({
-       title: '图片加载失败',
-       icon: 'none'
-     });
+     // 延迟显示错误提示，给图片更多加载时间
+     setTimeout(() => {
+       if (this.data.imageLoadError) {
+         wx.showToast({
+           title: '图片加载失败，请点击重新加载',
+           icon: 'none',
+           duration: 3000
+         });
+       }
+     }, 1000);
    },
 
    // 重新加载图片

@@ -10,7 +10,15 @@ Page({
       inviteCode: ''
     },
     loading: false,
-    canSubmit: false
+    canSubmit: false,
+    validation: {
+      phoneValid: null, // null: 未验证, true: 有效, false: 无效
+      phoneError: '',
+      nicknameValid: null, // null: 未验证, true: 有效, false: 无效
+      nicknameError: '',
+      inviteCodeValid: null,
+      inviteCodeError: ''
+    }
   },
 
   onLoad: function() {
@@ -66,16 +74,107 @@ Page({
     this.setData({
       'formData.phone': phone
     });
+    // 移除实时验证，只更新数据
     this.checkCanSubmit();
   },
 
+  // 手机号失去焦点事件
+  onPhoneBlur(e) {
+    const phone = e.detail.value;
+    this.validatePhone(phone);
+    this.checkCanSubmit();
+  },
+
+  // 验证手机号
+  validatePhone(phone) {
+    const phoneRegex = /^1[3-9]\d{9}$/;
+    let phoneValid = null;
+    let phoneError = '';
+
+    if (phone.length === 0) {
+      phoneValid = null;
+      phoneError = '';
+    } else if (phone.length < 11) {
+      phoneValid = false;
+      phoneError = '手机号长度不足11位';
+    } else if (phone.length > 11) {
+      phoneValid = false;
+      phoneError = '手机号长度超过11位';
+    } else if (!phoneRegex.test(phone)) {
+      phoneValid = false;
+      phoneError = '请输入正确的手机号格式';
+    } else {
+      phoneValid = true;
+      phoneError = '';
+    }
+
+    this.setData({
+      'validation.phoneValid': phoneValid,
+      'validation.phoneError': phoneError
+    });
+  },
+
+  // 昵称输入事件
   // 昵称输入事件
   onNicknameInput(e) {
     const nickname = e.detail.value;
     this.setData({
       'formData.nickname': nickname
     });
+    // 移除实时验证，只更新数据
     this.checkCanSubmit();
+  },
+
+  // 昵称失去焦点事件
+  onNicknameBlur(e) {
+    const nickname = e.detail.value;
+    this.validateNickname(nickname);
+    this.checkCanSubmit();
+  },
+
+  // 昵称验证函数
+  validateNickname(nickname) {
+    if (!nickname || nickname.trim() === '') {
+      this.setData({
+        'validation.nicknameValid': false,
+        'validation.nicknameError': '请输入昵称'
+      });
+      return false;
+    }
+
+    // 检查长度：4-20个字符
+    if (nickname.length < 4) {
+      this.setData({
+        'validation.nicknameValid': false,
+        'validation.nicknameError': '昵称至少需要4个字符'
+      });
+      return false;
+    }
+
+    if (nickname.length > 20) {
+      this.setData({
+        'validation.nicknameValid': false,
+        'validation.nicknameError': '昵称不能超过20个字符'
+      });
+      return false;
+    }
+
+    // 检查字符类型：只允许字母、数字、汉字和下划线
+    const validPattern = /^[a-zA-Z0-9\u4e00-\u9fa5_]+$/;
+    if (!validPattern.test(nickname)) {
+      this.setData({
+        'validation.nicknameValid': false,
+        'validation.nicknameError': '昵称只能包含字母、数字、汉字和下划线'
+      });
+      return false;
+    }
+
+    // 验证通过
+    this.setData({
+      'validation.nicknameValid': true,
+      'validation.nicknameError': ''
+    });
+    return true;
   },
 
   // 邀请码输入事件
@@ -84,7 +183,43 @@ Page({
     this.setData({
       'formData.inviteCode': inviteCode
     });
+    // 移除实时验证，只更新数据
     this.checkCanSubmit();
+  },
+
+  // 邀请码失去焦点事件
+  onInviteCodeBlur(e) {
+    const inviteCode = e.detail.value.toUpperCase();
+    this.validateInviteCode(inviteCode);
+    this.checkCanSubmit();
+  },
+
+  // 验证邀请码
+  validateInviteCode(inviteCode) {
+    let inviteCodeValid = null;
+    let inviteCodeError = '';
+
+    if (inviteCode.length === 0) {
+      inviteCodeValid = null;
+      inviteCodeError = '';
+    } else if (inviteCode.length < 8) {
+      inviteCodeValid = false;
+      inviteCodeError = '邀请码长度不足8位';
+    } else if (inviteCode.length > 8) {
+      inviteCodeValid = false;
+      inviteCodeError = '邀请码长度超过8位';
+    } else if (!/^[A-Z0-9]{8}$/.test(inviteCode)) {
+      inviteCodeValid = false;
+      inviteCodeError = '邀请码只能包含大写字母和数字';
+    } else {
+      inviteCodeValid = true;
+      inviteCodeError = '';
+    }
+
+    this.setData({
+      'validation.inviteCodeValid': inviteCodeValid,
+      'validation.inviteCodeError': inviteCodeError
+    });
   },
 
   // 性别选择事件
@@ -99,11 +234,20 @@ Page({
   // 检查是否可以提交
   checkCanSubmit() {
     const { phone, nickname, gender, inviteCode } = this.data.formData;
-    const phoneRegex = /^1[3-9]\d{9}$/;
-    const canSubmit = phoneRegex.test(phone) && 
-                     nickname.trim().length > 0 && 
-                     gender && 
-                     inviteCode.trim().length === 8; // 邀请码必须是8位
+    const { phoneValid, nicknameValid, inviteCodeValid } = this.data.validation;
+    
+    // 基本字段检查：所有字段都必须有内容
+    const hasAllFields = phone.trim().length > 0 && 
+                        nickname.trim().length > 0 && 
+                        gender && 
+                        inviteCode.trim().length > 0;
+    
+    // 验证状态检查：如果已经验证过，必须验证通过；如果未验证过，允许提交（提交时会再次验证）
+    const validationPassed = (phoneValid === null || phoneValid === true) && 
+                            (nicknameValid === null || nicknameValid === true) &&
+                            (inviteCodeValid === null || inviteCodeValid === true);
+    
+    const canSubmit = hasAllFields && validationPassed;
     
     this.setData({
       canSubmit: canSubmit
@@ -122,11 +266,33 @@ Page({
 
     const { phone, nickname, gender, inviteCode } = this.data.formData;
     
-    // 验证手机号格式
-    const phoneRegex = /^1[3-9]\d{9}$/;
-    if (!phoneRegex.test(phone)) {
+    // 提交前进行最终验证
+    this.validatePhone(phone);
+    this.validateNickname(nickname);
+    this.validateInviteCode(inviteCode);
+    
+    // 检查验证结果
+    const { phoneValid, nicknameValid, inviteCodeValid } = this.data.validation;
+    
+    if (phoneValid !== true) {
       wx.showToast({
-        title: '手机号格式不正确',
+        title: this.data.validation.phoneError || '手机号格式不正确',
+        icon: 'none'
+      });
+      return;
+    }
+
+    if (nicknameValid !== true) {
+      wx.showToast({
+        title: this.data.validation.nicknameError || '昵称格式不正确',
+        icon: 'none'
+      });
+      return;
+    }
+
+    if (inviteCodeValid !== true) {
+      wx.showToast({
+        title: this.data.validation.inviteCodeError || '邀请码格式不正确',
         icon: 'none'
       });
       return;
@@ -144,15 +310,6 @@ Page({
     if (nickname.length > 20) {
       wx.showToast({
         title: '昵称不能超过20个字符',
-        icon: 'none'
-      });
-      return;
-    }
-
-    // 验证邀请码
-    if (!inviteCode || inviteCode.length !== 8) {
-      wx.showToast({
-        title: '请输入8位邀请码',
         icon: 'none'
       });
       return;
